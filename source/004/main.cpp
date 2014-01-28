@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstdio>
 #include <cstdint>
-#include <cmath>
 using namespace std;
 
 bool IsSymmetric(const char* text, int length)
@@ -26,20 +25,27 @@ bool IsPalindrome(int64_t n)
 
 int main(int argc, char** argv)
 {
+    const int64_t Limit = 1000;
     int64_t highest = 0;
+    int64_t a = 0;
+    int64_t b = 0;
 
-    for (int64_t i = 100; i < 1000; ++i)
+    for (int64_t i = 100; i < Limit; ++i)
     {
-        for (int64_t j = 100; j < 1000; ++j)
+        for (int64_t j = i; j < Limit; ++j)
         {
             int64_t product = i * j;
             
             if (product > highest && IsPalindrome(product))
+            {
                 highest = product;
+                a = i;
+                b = j;
+            }
         }
     }
     
-    cout << highest << endl;
+    cout << a << " * " << b << " = " << highest << endl;
     
     return 0;
 }

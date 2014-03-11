@@ -54,6 +54,10 @@ bool PrimeCache::IsPrime(int64_t value)
                 isPrime = false;
                 break;
             }
+            else if (j * j > i)
+            {
+                break;
+            }
         }
         
         if (isPrime) _primes.insert(i);

@@ -1,27 +1,8 @@
 #include <iostream>
-#include <cstdint>
+#include "PrimeCache.hpp"
 using namespace std;
 
-bool IsPrime(int64_t n)
-{
-    bool result = false;
-    
-    if (n > 1)
-    {
-        result = true;
-        
-        for (int64_t i = 2; i < n; ++i)
-        {
-            if (!(n % i))
-            {
-                result = false;
-                break;
-            }
-        }
-    }
-    
-    return result;
-}
+PrimeCache cache;
 
 int64_t SumOfPrimesBelow(int64_t n)
 {
@@ -29,7 +10,7 @@ int64_t SumOfPrimesBelow(int64_t n)
     
     for (int64_t i = 2; i < n; ++i)
     {
-        if (IsPrime(i)) sum += i;
+        if (cache.IsPrime(i)) sum += i;
     }
     
     return sum;

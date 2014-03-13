@@ -7,9 +7,9 @@ PrimeCache::PrimeCache()
 }
 
 PrimeCache::PrimeCache(PrimeCache&& other)
-    : _primes(std::move(other._primes))
-    , _lastCheck(other._lastCheck)
 {
+    std::swap(_primes, other._primes);
+    std::swap(_lastCheck, other._lastCheck);
 }
 
 PrimeCache::PrimeCache(const PrimeCache& other)
@@ -26,8 +26,8 @@ PrimeCache& PrimeCache::operator=(PrimeCache&& other)
 {
     if (this != &other)
     {
-        _primes = std::move(other._primes);
-        _lastCheck = other._lastCheck;
+        std::swap(_primes, other._primes);
+        std::swap(_lastCheck, other._lastCheck);
     }
 
     return *this;

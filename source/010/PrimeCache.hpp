@@ -19,6 +19,7 @@ public:
     
 private:
     std::set<int64_t> _primes;
+    int64_t _lastCheck;
 };
 
 #endif

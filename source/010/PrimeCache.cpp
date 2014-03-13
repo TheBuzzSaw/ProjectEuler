@@ -1,17 +1,20 @@
 #include "PrimeCache.hpp"
 
 PrimeCache::PrimeCache()
+    : _lastCheck(2)
 {
     _primes.insert(2);
 }
 
 PrimeCache::PrimeCache(PrimeCache&& other)
     : _primes(std::move(other._primes))
+    , _lastCheck(other._lastCheck)
 {
 }
 
 PrimeCache::PrimeCache(const PrimeCache& other)
     : _primes(other._primes)
+    , _lastCheck(other._lastCheck)
 {
 }
 
@@ -24,6 +27,7 @@ PrimeCache& PrimeCache::operator=(PrimeCache&& other)
     if (this != &other)
     {
         _primes = std::move(other._primes);
+        _lastCheck = other._lastCheck;
     }
 
     return *this;
@@ -34,6 +38,7 @@ PrimeCache& PrimeCache::operator=(const PrimeCache& other)
     if (this != &other)
     {
         _primes = other._primes;
+        _lastCheck = other._lastCheck;
     }
     
     return *this;
@@ -41,9 +46,7 @@ PrimeCache& PrimeCache::operator=(const PrimeCache& other)
 
 bool PrimeCache::IsPrime(int64_t value)
 {
-    int64_t highestPrime = *_primes.rbegin();
-    
-    for (int64_t i = highestPrime + 1; i <= value; ++i)
+    for (int64_t i = _lastCheck + 1; i <= value; ++i)
     {
         bool isPrime = true;
         
@@ -62,6 +65,8 @@ bool PrimeCache::IsPrime(int64_t value)
         
         if (isPrime) _primes.insert(i);
     }
+    
+    if (_lastCheck < value) _lastCheck = value;
     
     return _primes.count(value) > 0;
 }

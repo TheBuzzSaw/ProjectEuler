@@ -7,6 +7,7 @@ PrimeCache::PrimeCache()
 }
 
 PrimeCache::PrimeCache(PrimeCache&& other)
+    : PrimeCache()
 {
     std::swap(_primes, other._primes);
     std::swap(_lastCheck, other._lastCheck);

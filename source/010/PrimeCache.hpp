@@ -1,8 +1,8 @@
 #ifndef PrimeCacheHpp
 #define PrimeCacheHpp
 
-#include <set>
 #include <cstdint>
+#include <vector>
 
 class PrimeCache
 {
@@ -18,7 +18,7 @@ public:
     bool IsPrime(int64_t value);
     
 private:
-    std::set<int64_t> _primes;
+    std::vector<int64_t> _primes;
     int64_t _lastCheck;
 };
 

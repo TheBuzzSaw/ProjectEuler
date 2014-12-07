@@ -1,9 +1,10 @@
 #include "PrimeCache.hpp"
+#include <algorithm>
 
 PrimeCache::PrimeCache()
     : _lastCheck(2)
+    , _primes{2}
 {
-    _primes.insert(2);
 }
 
 PrimeCache::PrimeCache(PrimeCache&& other)
@@ -64,10 +65,13 @@ bool PrimeCache::IsPrime(int64_t value)
             }
         }
         
-        if (isPrime) _primes.insert(i);
+        if (isPrime) _primes.push_back(i);
     }
     
     if (_lastCheck < value) _lastCheck = value;
     
-    return _primes.count(value) > 0;
+    return std::binary_search(
+        _primes.begin(),
+        _primes.end(),
+        value);
 }

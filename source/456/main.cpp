@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <cstdint>
 #include <cmath>
 using namespace std;
@@ -50,6 +51,17 @@ T GetRadians(int64_t x, int64_t y)
     }
 }
 
+template<typename T>
+T GetOpposite(T radians)
+{
+    radians += Pi<T>();
+    
+    if (radians >= Pi<T>())
+        return radians - Tau<T>();
+    
+    return radians;
+}
+
 void TestGet(int x, int y)
 {
     auto radians = GetRadians<double>(x, y);
@@ -63,6 +75,8 @@ int64_t FindC(int64_t count)
     int64_t x = 1;
     int64_t y = 1;
     
+    cout << "Generating..." << endl;
+    
     int64_t originCount = 0;
     vector<double> angles;
     angles.reserve(count);
@@ -75,19 +89,45 @@ int64_t FindC(int64_t count)
         int64_t px = x - 16161;
         int64_t py = y - 15051;
         
-        if (px == 0 || py == 0)
-            cout << px << ", " << py << endl;
-        
         if (px == 0 && py == 0)
             ++originCount;
         else
             angles.push_back(GetRadians<double>(px, py));
     }
     
-    cout << "origin count: " << originCount << endl;
-    cout << "angle count: " << angles.size() << endl;
+    cout << "Sorting..." << endl;
     
-    return 0;
+    sort(angles.begin(), angles.end());
+    
+    cout << "Counting..." << endl;
+    
+    int64_t result = 0;
+    
+    for (size_t i = 0; i < angles.size(); ++i)
+    {
+        for (size_t j = i + 1; j < angles.size(); ++j)
+        {
+            auto low = angles[i];
+            auto high = angles[j];
+            
+            if ((high - low) >= Pi<double>()) break;
+            
+            low = GetOpposite(low);
+            high = GetOpposite(high);
+            
+            auto first = lower_bound(angles.begin() + j + 1, angles.end(), low);
+            
+            for (auto k = first; k != angles.end(); ++k)
+            {
+                if (*k >= low && *k <= high)
+                    ++result;
+                else
+                    break;
+            }
+        }
+    }
+    
+    return result;
 }
 
 void TestGets()
@@ -111,7 +151,8 @@ void TestGets()
 
 int main(int argc, char** argv)
 {
-    FindC(2000000);
+    auto result = FindC(8);
+    cout << "Result: " << result << endl;
     
     return 0;
 }

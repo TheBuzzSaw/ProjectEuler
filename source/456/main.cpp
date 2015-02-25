@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <algorithm>
 #include <cstdint>
@@ -89,6 +90,8 @@ int64_t FindC(int64_t count)
         int64_t px = x - 16161;
         int64_t py = y - 15051;
         
+        if (count < 10) cout << px << ", " << py << endl;
+        
         if (px == 0 && py == 0)
             ++originCount;
         else
@@ -105,21 +108,23 @@ int64_t FindC(int64_t count)
     
     for (size_t i = 0; i < angles.size(); ++i)
     {
+        auto low = angles[i];
+        if (low >= 0.0) break;
+        
         for (size_t j = i + 1; j < angles.size(); ++j)
         {
-            auto low = angles[i];
             auto high = angles[j];
             
             if ((high - low) >= Pi<double>()) break;
             
-            low = GetOpposite(low);
-            high = GetOpposite(high);
+            auto low2 = low + Pi<double>();
+            auto high2 = high + Pi<double>();
             
-            auto first = lower_bound(angles.begin() + j + 1, angles.end(), low);
+            auto first = lower_bound(angles.begin() + j + 1, angles.end(), low2);
             
             for (auto k = first; k != angles.end(); ++k)
             {
-                if (*k >= low && *k <= high)
+                if (*k <= high2)
                     ++result;
                 else
                     break;
@@ -151,8 +156,22 @@ void TestGets()
 
 int main(int argc, char** argv)
 {
-    auto result = FindC(8);
-    cout << "Result: " << result << endl;
+    for (int i = 1; i < argc; ++i)
+    {
+        int64_t n;
+        stringstream ss;
+        ss << argv[i];
+        
+        if (ss >> n && n > 0)
+        {
+            auto result = FindC(n);
+            cout << "Result: " << result << endl;
+        }
+        else
+        {
+            cerr << "invalid input: " << argv[i] << '\n';
+        }
+    }
     
     return 0;
 }

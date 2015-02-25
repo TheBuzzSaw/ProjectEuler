@@ -34,11 +34,22 @@ void TestGet(int x, int y)
 
 int main(int argc, char** argv)
 {
-    TestGet(50, 50);
-    TestGet(50, 0);
-    TestGet(50, -50);
-    TestGet(0, -50);
-    TestGet(-50, -50);
+    int64_t x = 1;
+    int64_t y = 1;
+    
+    cout << "P = {";
+    
+    for (int i = 0; i < 8; ++i)
+    {
+        x = (x * 1248) % 32323;
+        y = (y * 8421) % 30103;
+        
+        if (i > 0) cout << ", ";
+        
+        cout << "(" << (x - 16161) << ", " << (y - 15051) << ")";
+    }
+    
+    cout << "}" << endl;
     
     return 0;
 }

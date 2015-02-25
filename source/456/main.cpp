@@ -52,17 +52,6 @@ T GetRadians(int64_t x, int64_t y)
     }
 }
 
-template<typename T>
-T GetOpposite(T radians)
-{
-    radians += Pi<T>();
-    
-    if (radians >= Pi<T>())
-        return radians - Tau<T>();
-    
-    return radians;
-}
-
 void TestGet(int x, int y)
 {
     auto radians = GetRadians<double>(x, y);
@@ -106,25 +95,24 @@ int64_t FindC(int64_t count)
     
     int64_t result = 0;
     
-    for (size_t i = 0; i < angles.size(); ++i)
+    auto first = angles.begin() + 1;
+    
+    for (auto i = angles.begin(); i != angles.end(); ++i)
     {
-        auto low = angles[i];
-        if (low >= 0.0) break;
+        if (*i >= 0.0) break;
         
-        for (size_t j = i + 1; j < angles.size(); ++j)
+        auto low = *i + Pi<double>();
+        first = lower_bound(first, angles.end(), low);
+        
+        for (auto j = i + 1; j != angles.end(); ++j)
         {
-            auto high = angles[j];
+            if (*j >= low) break;
             
-            if ((high - low) >= Pi<double>()) break;
-            
-            auto low2 = low + Pi<double>();
-            auto high2 = high + Pi<double>();
-            
-            auto first = lower_bound(angles.begin() + j + 1, angles.end(), low2);
+            auto high = *j + Pi<double>();
             
             for (auto k = first; k != angles.end(); ++k)
             {
-                if (*k <= high2)
+                if (*k <= high)
                     ++result;
                 else
                     break;

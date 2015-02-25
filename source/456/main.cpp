@@ -65,7 +65,7 @@ int64_t FindC(int64_t count)
     int64_t x = 1;
     int64_t y = 1;
     
-    cout << "Generating..." << endl;
+    cout << "Generating " << count << "..." << endl;
     
     int64_t originCount = 0;
     vector<double> angles;
@@ -79,13 +79,16 @@ int64_t FindC(int64_t count)
         int64_t px = x - 16161;
         int64_t py = y - 15051;
         
-        if (count < 10) cout << px << ", " << py << endl;
+        //if (count < 10) cout << px << ", " << py << endl;
         
         if (px == 0 && py == 0)
             ++originCount;
         else
             angles.push_back(GetRadians<double>(px, py));
     }
+    
+    if (originCount > 0)
+        cout << originCount << " origins\n";
     
     cout << "Sorting..." << endl;
     
@@ -95,28 +98,38 @@ int64_t FindC(int64_t count)
     
     int64_t result = 0;
     
-    auto first = angles.begin() + 1;
+    auto first = lower_bound(
+        angles.begin(),
+        angles.end(),
+        0.0);
     
     for (auto i = angles.begin(); i != angles.end(); ++i)
     {
         if (*i >= 0.0) break;
         
         auto low = *i + Pi<double>();
-        first = lower_bound(first, angles.end(), low);
+        
+        while (first != angles.end() && *first < low) ++first;
+        
+        auto k = first;
+        
+        int64_t batch = 0;
         
         for (auto j = i + 1; j != angles.end(); ++j)
         {
-            if (*j >= low) break;
+            if (*j > low) break;
             
             auto high = *j + Pi<double>();
             
-            for (auto k = first; k != angles.end(); ++k)
+            while (k != angles.end())
             {
-                if (*k <= high)
-                    ++result;
-                else
-                    break;
+                if (*k > high) break;
+                
+                ++batch;
+                ++k;
             }
+            
+            result += batch;
         }
     }
     
@@ -125,25 +138,27 @@ int64_t FindC(int64_t count)
 
 void TestGets()
 {
-    TestGet(-1, 50);
-    TestGet(0, 50);
-    TestGet(1, 50);
+    cout << "TOP\n";
+    for (int i = 0; i < 10; ++i)
+        TestGet(-50 + 10 * i, 50);
     
-    TestGet(50, 1);
-    TestGet(50, 0);
-    TestGet(50, -1);
+    cout << "RIGHT\n";
+    for (int i = 0; i < 10; ++i)
+        TestGet(50, 50 - 10 * i);
     
-    TestGet(1, -50);
-    TestGet(0, -50);
-    TestGet(-1, -50);
+    cout << "BOTTOM\n";
+    for (int i = 0; i < 10; ++i)
+        TestGet(50 - 10 * i, -50);
     
-    TestGet(-50, -1);
-    TestGet(-50, 0);
-    TestGet(-50, 1);
+    cout << "LEFT\n";
+    for (int i = 0; i < 10; ++i)
+        TestGet(-50, -50 + 10 * i);
 }
 
 int main(int argc, char** argv)
 {
+    if (argc < 2) TestGets();
+    
     for (int i = 1; i < argc; ++i)
     {
         int64_t n;

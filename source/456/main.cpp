@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <vector>
 #include <algorithm>
 #include <cstdint>
@@ -62,6 +63,7 @@ void TestGet(int x, int y)
 
 int64_t FindC(int64_t count)
 {
+    ofstream fout("dump.txt", ofstream::binary);
     int64_t x = 1;
     int64_t y = 1;
     
@@ -80,13 +82,15 @@ int64_t FindC(int64_t count)
         int64_t px = x - 16161;
         int64_t py = y - 15051;
         
-        //if (count < 10) cout << px << ", " << py << endl;
+        fout << "(" << px << ", " << py << ") angle " << ToDegrees(GetRadians<double>(px, py)) << "\n";
         
         if (px == 0 && py == 0)
             ++originCount;
         else
             angles.push_back(GetRadians<double>(px, py));
     }
+    
+    fout << '\n';
     
     if (originCount > 0)
         cout << originCount << " origins\n";
@@ -96,45 +100,59 @@ int64_t FindC(int64_t count)
     
     sort(angles.begin(), angles.end());
     
-    for (size_t i = 1; i < angles.size(); ++i)
-    {
-        if (angles[i] < angles[i - 1])
-            cerr << "THE CAKE IS A LIE.\n";
-    }
-    
     cout << "Counting...";
     cout.flush();
     
+    fout << "Sorted Angles:";
+    for (size_t i = 0; i < angles.size(); ++i)
+        fout << " (" << i << ") " << ToDegrees(angles[i]);
+    
+    fout << '\n';
+    
     int64_t result = 0;
     
-    auto first = lower_bound(
-        angles.begin(),
-        angles.end(),
-        0.0);
-    
-    for (auto i = angles.begin();
-        i != angles.end() && *i < 0.0;
-        ++i)
+    for (size_t i = 0; i < angles.size(); ++i)
     {
-        auto low = *i + Pi<double>();
+        auto low = angles[i] + Pi<double>();
         
-        while (first != angles.end() && *first < low) ++first;
-        
-        auto k = first;
-        
-        int64_t batch = 0;
-        
-        for (auto j = i + 1;
-            j != angles.end() && j < first;
-            ++j)
+        for (size_t j = i + 1; j < angles.size() && angles[j] <= low; ++j)
         {
-            auto high = *j + Pi<double>();
+            auto high = angles[j] + Pi<double>();
             
-            while (k != angles.end() && *k <= high) ++batch, ++k;
+            fout
+                << "("
+                << i
+                << ") "
+                << ToDegrees(angles[i])
+                << " to ("
+                << j
+                << ") "
+                << ToDegrees(angles[j])
+                << " -> shadow "
+                << ToDegrees(low)
+                << " to "
+                << ToDegrees(high)
+                << ":";
+                
+            size_t k = j + 1;
+            while (k < angles.size() && angles[k] < low) ++k;
             
-            result += batch;
+            while (k < angles.size() && angles[k] <= high)
+            {
+                fout << " (" << k << ") " << ToDegrees(angles[k]);
+                ++result;
+                ++k;
+            }
+            
+            fout << '\n';
+            
+            //while (k != angles.end() && *k <= high) ++batch, ++k;
+            
+            //result += batch;
         }
     }
+    
+    fout.close();
     
     return result;
 }

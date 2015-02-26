@@ -65,7 +65,8 @@ int64_t FindC(int64_t count)
     int64_t x = 1;
     int64_t y = 1;
     
-    cout << "Generating " << count << "..." << endl;
+    cout << "[" << count << "] Generating...";
+    cout.flush();
     
     int64_t originCount = 0;
     vector<double> angles;
@@ -90,11 +91,19 @@ int64_t FindC(int64_t count)
     if (originCount > 0)
         cout << originCount << " origins\n";
     
-    cout << "Sorting..." << endl;
+    cout << "Sorting...";
+    cout.flush();
     
     sort(angles.begin(), angles.end());
     
-    cout << "Counting..." << endl;
+    for (size_t i = 1; i < angles.size(); ++i)
+    {
+        if (angles[i] < angles[i - 1])
+            cerr << "THE CAKE IS A LIE.\n";
+    }
+    
+    cout << "Counting...";
+    cout.flush();
     
     int64_t result = 0;
     
@@ -116,16 +125,12 @@ int64_t FindC(int64_t count)
         int64_t batch = 0;
         
         for (auto j = i + 1;
-            j != angles.end() && *j <= low;
+            j != angles.end() && j < first;
             ++j)
         {
             auto high = *j + Pi<double>();
             
-            while (k != angles.end() && *k <= high)
-            {
-                ++batch;
-                ++k;
-            }
+            while (k != angles.end() && *k <= high) ++batch, ++k;
             
             result += batch;
         }

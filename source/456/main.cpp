@@ -119,10 +119,12 @@ int64_t FindC(int64_t count)
             {
                 fout << *i << " to " << *j << " -> shadow " << low << " to (-1, 0):";
                 
+                result += distance(k, points.end());
+                
                 while (k != points.end())
                 {
                     fout << ' ' << *k;
-                    ++result, ++k;
+                    ++k;
                 }
             }
             

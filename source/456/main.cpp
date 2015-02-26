@@ -103,10 +103,10 @@ int64_t FindC(int64_t count)
         angles.end(),
         0.0);
     
-    for (auto i = angles.begin(); i != angles.end(); ++i)
+    for (auto i = angles.begin();
+        i != angles.end() && *i < 0.0;
+        ++i)
     {
-        if (*i >= 0.0) break;
-        
         auto low = *i + Pi<double>();
         
         while (first != angles.end() && *first < low) ++first;
@@ -115,16 +115,14 @@ int64_t FindC(int64_t count)
         
         int64_t batch = 0;
         
-        for (auto j = i + 1; j != angles.end(); ++j)
+        for (auto j = i + 1;
+            j != angles.end() && *j <= low;
+            ++j)
         {
-            if (*j > low) break;
-            
             auto high = *j + Pi<double>();
             
-            while (k != angles.end())
+            while (k != angles.end() && *k <= high)
             {
-                if (*k > high) break;
-                
                 ++batch;
                 ++k;
             }

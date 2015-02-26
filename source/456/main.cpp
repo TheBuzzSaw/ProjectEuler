@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <vector>
 #include <algorithm>
 #include <cstdint>
@@ -11,6 +12,11 @@ struct Point
     int64_t x;
     int64_t y;
 };
+
+ostream& operator<<(ostream& stream, const Point& point)
+{
+    return stream << '(' << point.x << ", " << point.y << ')';
+}
 
 int GetQuadrant(const Point& p)
 {
@@ -28,12 +34,21 @@ int64_t CrossZ(const Point& a, const Point& b)
 {
     return a.x * b.y - a.y * b.x;
 }
+bool operator==(const Point& a, const Point& b)
+{
+    return GetQuadrant(a) == GetQuadrant(b) && CrossZ(a, b) == 0;
+}
 
 bool operator<(const Point& a, const Point& b)
 {
     auto qa = GetQuadrant(a);
     auto qb = GetQuadrant(b);
     return qa < qb || (qa == qb && CrossZ(a, b) > 0);
+}
+
+bool operator<=(const Point& a, const Point& b)
+{
+    return a < b || a == b;
 }
 
 int64_t FindC(int64_t count)
@@ -69,12 +84,54 @@ int64_t FindC(int64_t count)
     
     sort(points.begin(), points.end());
     
-    cout << "\nPOINTS\n";
+    ofstream fout("dump.txt", ofstream::binary);
+    fout << "points:";
+    for (const auto& point : points) fout << ' ' << point;
     
-    for (const auto& point : points)
-        cout << point.x << ", " << point.y << endl;
+    int64_t result = 0;
     
-    return 0;
+    for (auto i = points.begin();
+        i != points.end() && GetQuadrant(*i) < 3;
+        ++i)
+    {
+        Point low = { -i->x, -i->y };
+        
+        for (auto j = i + 1;
+            j != points.end() && *j <= low;
+            ++j)
+        {
+            auto k = j + 1;
+            while (k != points.end() && *k < low) ++k;
+            
+            if (GetQuadrant(*j) < 3)
+            {            
+                Point high = { -j->x, -j->y };
+                
+                fout << *i << " to " << *j << " -> shadow " << low << " to " << high << ":";
+                
+                while (k != points.end() && *k <= high)
+                {
+                    fout << ' ' << *k;
+                    ++result, ++k;
+                }
+            }
+            else
+            {
+                fout << *i << " to " << *j << " -> shadow " << low << " to (-1, 0):";
+                
+                while (k != points.end())
+                {
+                    fout << ' ' << *k;
+                    ++result, ++k;
+                }
+            }
+            
+            fout << '\n';
+        }
+    }
+    
+    fout.close();
+    return result;
 }
 
 int main(int argc, char** argv)

@@ -73,30 +73,31 @@ bool operator>=(const Point& a, const Point& b)
     return a > b || a == b;
 }
 
-int64_t CountPoints(
+struct Range
+{
+    vector<Point>::const_iterator low;
+    vector<Point>::const_iterator high;
+};
+
+Range FindPoints(
     const vector<Point>& points,
     const Point& low,
     const Point& high)
 {
-    int64_t result = 0;
+    Range result;
     
-    auto a = lower_bound(
+    result.low = lower_bound(
         points.begin(),
         points.end(),
         low);
     
     if (low < high)
     {
-        auto b = upper_bound(a, points.end(), high);
-        
-        result = distance(a, b);
+        result.high = upper_bound(result.low, points.end(), high);
     }
     else
     {
-        auto b = upper_bound(points.begin(), points.end(), high);
-        
-        result = distance(a, points.end());
-        result += distance(points.begin(), b);
+        result.high = upper_bound(points.begin(), result.low, high);
     }
     
     return result;
@@ -146,6 +147,15 @@ int64_t FindC(int64_t count)
     
     int64_t result = 0;
     
+    auto countPoints = [&](const Range& range)
+    {
+        if (range.low < range.high)
+            return distance(range.low, range.high);
+        
+        return distance(range.low, points.cend()) +
+            distance(points.cbegin(), range.high);
+    };
+    
     for (auto i = points.begin(); i != points.end(); ++i)
     {
         Point boundaries[3];
@@ -153,10 +163,10 @@ int64_t FindC(int64_t count)
         boundaries[1] = RotateCCW(boundaries[0]);
         boundaries[2] = RotateCCW(boundaries[1]);
         
-        int64_t a = CountPoints(points, boundaries[0], boundaries[1]);
-        int64_t b = CountPoints(points, boundaries[1], boundaries[2]);
+        auto a = FindPoints(points, boundaries[0], boundaries[1]);
+        auto b = FindPoints(points, boundaries[1], boundaries[2]);
         
-        result += a * b;
+        result += countPoints(a) * countPoints(b);
     }
     
     return result;

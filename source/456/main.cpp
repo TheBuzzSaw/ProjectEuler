@@ -85,29 +85,41 @@ int64_t FindC(int64_t count)
     sort(points.begin(), points.end());
     
     int64_t result = 0;
+	
+	int a = 0;
+	auto first = lower_bound(
+		points.begin(),
+		points.end(),
+		Point { 1, 0 });
     
     for (auto i = points.begin();
         i != points.end() && GetQuadrant(*i) < 3;
         ++i)
     {
+		//cout << "A " << ++a << endl;
         Point low = { -i->x, -i->y };
+		
+		while (first != points.end() && *first < low) ++first;
+		auto k = first;
+		
+		int64_t batch = 0;
         
         for (auto j = i + 1;
             j != points.end() && *j <= low;
             ++j)
         {
-            auto k = j + 1;
-            while (k != points.end() && *k < low) ++k;
-            
             if (GetQuadrant(*j) < 3)
             {            
                 Point high = { -j->x, -j->y };
-                while (k != points.end() && *k <= high) ++result, ++k;
+                while (k != points.end() && *k <= high) ++batch, ++k;
             }
             else
             {
-                result += distance(k, points.end());
+                batch += distance(k, points.end());
+				k = points.end();
             }
+			
+			result += batch;
         }
     }
 	

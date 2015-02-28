@@ -136,6 +136,11 @@ int64_t FindC(int64_t count)
     
     sort(points.begin(), points.end());
     
+    ofstream fout("dump.txt", ofstream::binary);
+    fout << "sorted points --";
+    for (const auto& point : points) fout << ' ' << point;
+    fout << '\n';
+    
     for (size_t i = 1; i < points.size(); ++i)
     {
         if (points[i - 1] > points[i] || points[i] < points[i - 1])
@@ -167,6 +172,18 @@ int64_t FindC(int64_t count)
         auto b = FindPoints(points, boundaries[1], boundaries[2]);
         
         result += countPoints(a) * countPoints(b);
+        
+        for (auto j = a.low; j != a.high; ++j)
+        {
+            if (j == points.cend()) j = points.cbegin();
+            
+            for (auto k = b.low; k != b.high; ++k)
+            {
+                if (k == points.cend()) k = points.cbegin();
+                
+                fout << *i << ' ' << *j << ' ' << *k << '\n';
+            }
+        }
     }
     
     return result;

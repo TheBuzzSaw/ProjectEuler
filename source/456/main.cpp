@@ -84,10 +84,6 @@ int64_t FindC(int64_t count)
     
     sort(points.begin(), points.end());
     
-    ofstream fout("dump.txt", ofstream::binary);
-    fout << "points:";
-    for (const auto& point : points) fout << ' ' << point;
-    
     int64_t result = 0;
     
     for (auto i = points.begin();
@@ -106,33 +102,15 @@ int64_t FindC(int64_t count)
             if (GetQuadrant(*j) < 3)
             {            
                 Point high = { -j->x, -j->y };
-                
-                fout << *i << " to " << *j << " -> shadow " << low << " to " << high << ":";
-                
-                while (k != points.end() && *k <= high)
-                {
-                    fout << ' ' << *k;
-                    ++result, ++k;
-                }
+                while (k != points.end() && *k <= high) ++result, ++k;
             }
             else
             {
-                fout << *i << " to " << *j << " -> shadow " << low << " to (-1, 0):";
-                
                 result += distance(k, points.end());
-                
-                while (k != points.end())
-                {
-                    fout << ' ' << *k;
-                    ++k;
-                }
             }
-            
-            fout << '\n';
         }
     }
-    
-    fout.close();
+	
     return result;
 }
 

@@ -161,6 +161,8 @@ int64_t FindC(int64_t count)
             distance(points.cbegin(), range.high);
     };
     
+    int logLimit = 1000;
+    
     for (auto i = points.begin(); i != points.end(); ++i)
     {
         Point boundaries[3];
@@ -170,21 +172,42 @@ int64_t FindC(int64_t count)
         
         auto a = FindPoints(points, boundaries[0], boundaries[1]);
         auto b = FindPoints(points, boundaries[1], boundaries[2]);
+        auto ca = countPoints(a);
+        auto cb = countPoints(b);
         
-        result += countPoints(a) * countPoints(b);
+        result += ca * cb;
         
-        for (auto j = a.low; j != a.high; ++j)
+        if (ca > 0 && cb > 0)
         {
-            if (j == points.cend()) j = points.cbegin();
-            
-            for (auto k = b.low; k != b.high; ++k)
+            for (auto j = a.low; j != a.high; ++j)
             {
-                if (k == points.cend()) k = points.cbegin();
+                if (j == points.cend()) j = points.cbegin();
+                if (j == a.high) break;
                 
-                fout << *i << ' ' << *j << ' ' << *k << '\n';
+                for (auto k = b.low; k != b.high; ++k)
+                {
+                    if (k == points.cend()) k = points.cbegin();
+                    if (k == b.high) break;
+                    
+                    fout << *i << ' ' << *j << ' ' << *k << '\n';
+                    
+                    fout << distance(points.begin(), i)
+                        << ' ' << distance(points.cbegin(), j)
+                        << ' ' << distance(points.cbegin(), k)
+                        << '\n';
+                    
+                    if (--logLimit < 0)
+                    {
+                        fout << "BLAM\n";
+                        fout.close();
+                        return 0;
+                    }
+                }
             }
         }
     }
+    
+    fout.close();
     
     return result;
 }

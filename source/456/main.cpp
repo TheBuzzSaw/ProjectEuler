@@ -15,12 +15,12 @@ struct Point
 
 Point RotateCW(const Point& point)
 {
-	return { point.y, -point.x };
+    return { point.y, -point.x };
 }
 
 Point RotateCCW(const Point& point)
 {
-	return { -point.y, point.x };
+    return { -point.y, point.x };
 }
 
 ostream& operator<<(ostream& stream, const Point& point)
@@ -74,32 +74,32 @@ bool operator>=(const Point& a, const Point& b)
 }
 
 int64_t CountPoints(
-	const vector<Point>& points,
-	const Point& low,
-	const Point& high)
+    const vector<Point>& points,
+    const Point& low,
+    const Point& high)
 {
-	int64_t result = 0;
-	
-	auto a = lower_bound(
-		points.begin(),
-		points.end(),
-		low);
-	
-	if (low < high)
-	{
-		auto b = upper_bound(a, points.end(), high);
-		
-		result = distance(a, b);
-	}
-	else
-	{
-		auto b = upper_bound(points.begin(), points.end(), high);
-		
-		result = distance(a, points.end());
-		result += distance(points.begin(), b);
-	}
-	
-	return result;
+    int64_t result = 0;
+    
+    auto a = lower_bound(
+        points.begin(),
+        points.end(),
+        low);
+    
+    if (low < high)
+    {
+        auto b = upper_bound(a, points.end(), high);
+        
+        result = distance(a, b);
+    }
+    else
+    {
+        auto b = upper_bound(points.begin(), points.end(), high);
+        
+        result = distance(a, points.end());
+        result += distance(points.begin(), b);
+    }
+    
+    return result;
 }
 
 int64_t FindC(int64_t count)
@@ -134,53 +134,53 @@ int64_t FindC(int64_t count)
     cout.flush();
     
     sort(points.begin(), points.end());
-	
-	for (size_t i = 1; i < points.size(); ++i)
-	{
-		if (points[i - 1] > points[i] || points[i] < points[i - 1])
-			cerr << "BLAM";
-	}
-	
-	cout << "Counting...";
+    
+    for (size_t i = 1; i < points.size(); ++i)
+    {
+        if (points[i - 1] > points[i] || points[i] < points[i - 1])
+            cerr << "BLAM";
+    }
+    
+    cout << "Counting...";
     cout.flush();
     
     int64_t result = 0;
-	
-	for (auto i = points.begin(); i != points.end(); ++i)
-	{
-		Point boundaries[3];
-		boundaries[0] = RotateCCW(*i);
-		boundaries[1] = RotateCCW(boundaries[0]);
-		boundaries[2] = RotateCCW(boundaries[1]);
-		
-		int64_t a = CountPoints(points, boundaries[0], boundaries[1]);
-		int64_t b = CountPoints(points, boundaries[1], boundaries[2]);
-		
-		result += a * b;
-	}
-	
+    
+    for (auto i = points.begin(); i != points.end(); ++i)
+    {
+        Point boundaries[3];
+        boundaries[0] = RotateCCW(*i);
+        boundaries[1] = RotateCCW(boundaries[0]);
+        boundaries[2] = RotateCCW(boundaries[1]);
+        
+        int64_t a = CountPoints(points, boundaries[0], boundaries[1]);
+        int64_t b = CountPoints(points, boundaries[1], boundaries[2]);
+        
+        result += a * b;
+    }
+    
     return result;
 }
 
 void TestRotate()
 {
-	Point point = { 1, 9 };
-	for (int i = 0; i < 4; ++i)
-	{
-		point = RotateCW(point);
-		cout << point << endl;
-	}
-	
-	for (int i = 0; i < 4; ++i)
-	{
-		point = RotateCCW(point);
-		cout << point << endl;
-	}
+    Point point = { 1, 9 };
+    for (int i = 0; i < 4; ++i)
+    {
+        point = RotateCW(point);
+        cout << point << endl;
+    }
+    
+    for (int i = 0; i < 4; ++i)
+    {
+        point = RotateCCW(point);
+        cout << point << endl;
+    }
 }
 
 int main(int argc, char** argv)
 {
-	for (int i = 1; i < argc; ++i)
+    for (int i = 1; i < argc; ++i)
     {
         int64_t n;
         stringstream ss;
@@ -188,9 +188,9 @@ int main(int argc, char** argv)
         
         if (ss >> n && n > 0)
         {
-			// 8 : 20
-			// 600 : 8950634
-			// 40000 : 2666610948988
+            // 8 : 20
+            // 600 : 8950634
+            // 40000 : 2666610948988
             auto result = FindC(n);
             cout << "Result: " << result << endl;
         }

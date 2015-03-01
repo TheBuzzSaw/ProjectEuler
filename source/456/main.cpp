@@ -13,6 +13,16 @@ struct Point
     int64_t y;
 };
 
+Point RotateCW(const Point& point)
+{
+	return { point.y, -point.x };
+}
+
+Point RotateCCW(const Point& point)
+{
+	return { -point.y, point.x };
+}
+
 ostream& operator<<(ostream& stream, const Point& point)
 {
     return stream << '(' << point.x << ", " << point.y << ')';
@@ -83,6 +93,9 @@ int64_t FindC(int64_t count)
     cout.flush();
     
     sort(points.begin(), points.end());
+	
+	cout << "Counting...";
+    cout.flush();
     
     int64_t result = 0;
 	
@@ -100,7 +113,9 @@ int64_t FindC(int64_t count)
         Point low = { -i->x, -i->y };
 		
 		while (first != points.end() && *first < low) ++first;
-		auto k = first;
+		
+		auto f = first;
+		auto k = f;
 		
 		int64_t batch = 0;
         
@@ -108,7 +123,7 @@ int64_t FindC(int64_t count)
             j != points.end() && *j <= low;
             ++j)
         {
-            if (GetQuadrant(*j) < 3)
+			if (GetQuadrant(*j) < 3)
             {            
                 Point high = { -j->x, -j->y };
                 while (k != points.end() && *k <= high) ++batch, ++k;
@@ -128,6 +143,19 @@ int64_t FindC(int64_t count)
 
 int main(int argc, char** argv)
 {
+	Point point = { 1, 9 };
+	for (int i = 0; i < 4; ++i)
+	{
+		point = RotateCW(point);
+		cout << point << endl;
+	}
+	
+	for (int i = 0; i < 4; ++i)
+	{
+		point = RotateCCW(point);
+		cout << point << endl;
+	}
+	
     for (int i = 1; i < argc; ++i)
     {
         int64_t n;
@@ -136,6 +164,9 @@ int main(int argc, char** argv)
         
         if (ss >> n && n > 0)
         {
+			// 8 : 20
+			// 600 : 8950634
+			// 40000 : 2666610948988
             auto result = FindC(n);
             cout << "Result: " << result << endl;
         }

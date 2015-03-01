@@ -56,9 +56,50 @@ bool operator<(const Point& a, const Point& b)
     return qa < qb || (qa == qb && CrossZ(a, b) > 0);
 }
 
+bool operator>(const Point& a, const Point& b)
+{
+    auto qa = GetQuadrant(a);
+    auto qb = GetQuadrant(b);
+    return qa > qb || (qa == qb && CrossZ(a, b) < 0);
+}
+
 bool operator<=(const Point& a, const Point& b)
 {
     return a < b || a == b;
+}
+
+bool operator>=(const Point& a, const Point& b)
+{
+    return a > b || a == b;
+}
+
+int64_t CountPoints(
+	const vector<Point>& points,
+	const Point& low,
+	const Point& high)
+{
+	int64_t result = 0;
+	
+	auto a = lower_bound(
+		points.begin(),
+		points.end(),
+		low);
+	
+	if (low < high)
+	{
+		auto b = upper_bound(a, points.end(), high);
+		
+		result = distance(a, b);
+	}
+	else
+	{
+		auto b = upper_bound(points.begin(), points.end(), high);
+		
+		result = distance(a, points.end());
+		result += distance(points.begin(), b);
+	}
+	
+	return result;
 }
 
 int64_t FindC(int64_t count)
@@ -94,54 +135,34 @@ int64_t FindC(int64_t count)
     
     sort(points.begin(), points.end());
 	
+	for (size_t i = 1; i < points.size(); ++i)
+	{
+		if (points[i - 1] > points[i] || points[i] < points[i - 1])
+			cerr << "BLAM";
+	}
+	
 	cout << "Counting...";
     cout.flush();
     
     int64_t result = 0;
 	
-	int a = 0;
-	auto first = lower_bound(
-		points.begin(),
-		points.end(),
-		Point { 1, 0 });
-    
-    for (auto i = points.begin();
-        i != points.end() && GetQuadrant(*i) < 3;
-        ++i)
-    {
-		//cout << "A " << ++a << endl;
-        Point low = { -i->x, -i->y };
+	for (auto i = points.begin(); i != points.end(); ++i)
+	{
+		Point boundaries[3];
+		boundaries[0] = RotateCCW(*i);
+		boundaries[1] = RotateCCW(boundaries[0]);
+		boundaries[2] = RotateCCW(boundaries[1]);
 		
-		while (first != points.end() && *first < low) ++first;
+		int64_t a = CountPoints(points, boundaries[0], boundaries[1]);
+		int64_t b = CountPoints(points, boundaries[1], boundaries[2]);
 		
-		auto f = first;
-		auto k = f;
-		
-		int64_t batch = 0;
-        
-        for (auto j = i + 1;
-            j != points.end() && *j <= low;
-            ++j)
-        {
-			if (GetQuadrant(*j) < 3)
-            {            
-                Point high = { -j->x, -j->y };
-                while (k != points.end() && *k <= high) ++batch, ++k;
-            }
-            else
-            {
-                batch += distance(k, points.end());
-				k = points.end();
-            }
-			
-			result += batch;
-        }
-    }
+		result += a * b;
+	}
 	
     return result;
 }
 
-int main(int argc, char** argv)
+void TestRotate()
 {
 	Point point = { 1, 9 };
 	for (int i = 0; i < 4; ++i)
@@ -155,8 +176,11 @@ int main(int argc, char** argv)
 		point = RotateCCW(point);
 		cout << point << endl;
 	}
-	
-    for (int i = 1; i < argc; ++i)
+}
+
+int main(int argc, char** argv)
+{
+	for (int i = 1; i < argc; ++i)
     {
         int64_t n;
         stringstream ss;

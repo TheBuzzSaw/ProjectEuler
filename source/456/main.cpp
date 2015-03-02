@@ -44,6 +44,7 @@ int64_t CrossZ(const Point& a, const Point& b)
 {
     return a.x * b.y - a.y * b.x;
 }
+
 bool operator==(const Point& a, const Point& b)
 {
     return GetQuadrant(a) == GetQuadrant(b) && CrossZ(a, b) == 0;
@@ -73,34 +74,26 @@ bool operator>=(const Point& a, const Point& b)
     return a > b || a == b;
 }
 
-struct Range
-{
-    vector<Point>::const_iterator low;
-    vector<Point>::const_iterator high;
-};
-
-Range FindPoints(
+int64_t CountPoints(
     const vector<Point>& points,
     const Point& low,
     const Point& high)
 {
-    Range result;
-    
-    result.low = lower_bound(
-        points.begin(),
-        points.end(),
+    auto a = upper_bound(
+        points.cbegin(),
+        points.cend(),
         low);
     
     if (low < high)
     {
-        result.high = upper_bound(result.low, points.end(), high);
+        auto b = lower_bound(a, points.cend(), high);
+        return distance(a, b);
     }
     else
     {
-        result.high = upper_bound(points.begin(), result.low, high);
+        auto b = lower_bound(points.cbegin(), a, high);
+        return distance(a, points.cend()) + distance(points.cbegin(), b);
     }
-    
-    return result;
 }
 
 int64_t FindC(int64_t count)
@@ -136,11 +129,6 @@ int64_t FindC(int64_t count)
     
     sort(points.begin(), points.end());
     
-    ofstream fout("dump.txt", ofstream::binary);
-    fout << "sorted points --";
-    for (const auto& point : points) fout << ' ' << point;
-    fout << '\n';
-    
     for (size_t i = 1; i < points.size(); ++i)
     {
         if (points[i - 1] > points[i] || points[i] < points[i - 1])
@@ -152,62 +140,17 @@ int64_t FindC(int64_t count)
     
     int64_t result = 0;
     
-    auto countPoints = [&](const Range& range)
-    {
-        if (range.low < range.high)
-            return distance(range.low, range.high);
-        
-        return distance(range.low, points.cend()) +
-            distance(points.cbegin(), range.high);
-    };
-    
-    int logLimit = 1000;
-    
     for (auto i = points.begin(); i != points.end(); ++i)
     {
-        Point boundaries[3];
-        boundaries[0] = RotateCCW(*i);
-        boundaries[1] = RotateCCW(boundaries[0]);
-        boundaries[2] = RotateCCW(boundaries[1]);
+        auto boundary90 = RotateCCW(*i);
+        auto boundary180 = RotateCCW(boundary90);
+        auto boundary270 = RotateCCW(boundary180);
         
-        auto a = FindPoints(points, boundaries[0], boundaries[1]);
-        auto b = FindPoints(points, boundaries[1], boundaries[2]);
-        auto ca = countPoints(a);
-        auto cb = countPoints(b);
+        int64_t a = CountPoints(points, boundary90, boundary180);
+        int64_t b = CountPoints(points, boundary180, boundary270);
         
-        result += ca * cb;
-        
-        if (ca > 0 && cb > 0)
-        {
-            for (auto j = a.low; j != a.high; ++j)
-            {
-                if (j == points.cend()) j = points.cbegin();
-                if (j == a.high) break;
-                
-                for (auto k = b.low; k != b.high; ++k)
-                {
-                    if (k == points.cend()) k = points.cbegin();
-                    if (k == b.high) break;
-                    
-                    fout << *i << ' ' << *j << ' ' << *k << '\n';
-                    
-                    fout << distance(points.begin(), i)
-                        << ' ' << distance(points.cbegin(), j)
-                        << ' ' << distance(points.cbegin(), k)
-                        << '\n';
-                    
-                    if (--logLimit < 0)
-                    {
-                        fout << "BLAM\n";
-                        fout.close();
-                        return 0;
-                    }
-                }
-            }
-        }
+        result += a * b;
     }
-    
-    fout.close();
     
     return result;
 }

@@ -43,6 +43,10 @@ int main(int argc, char** argv)
     vector<char> b{1};
     vector<char> c;
     
+    a.reserve(1000);
+    b.reserve(1000);
+    c.reserve(1000);
+    
     size_t n = 2;
     
     while (b.size() < 1000)
@@ -54,7 +58,9 @@ int main(int argc, char** argv)
         ++n;
     }
     
-    cout << "First term to have 1000 digits: " << n << endl;
+    cout << "First term to have 1000 digits: " << n << "\n\nTerm: ";
+    
+    Write(cout, b) << endl;
     
     return 0;
 }

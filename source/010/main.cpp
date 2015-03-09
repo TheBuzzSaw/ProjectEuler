@@ -10,7 +10,7 @@ int64_t SumOfPrimesBelow(int64_t n)
     
     if (n > 2)
     {
-        cache.IsPrime(n);
+        cache.FillCache(n);
         
         for (auto prime : cache)
         {

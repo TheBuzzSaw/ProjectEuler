@@ -9,12 +9,13 @@ class PrimeCache
 public:
     PrimeCache();
     PrimeCache(PrimeCache&& other);
-    PrimeCache(const PrimeCache& other);
-    ~PrimeCache();
+    PrimeCache(const PrimeCache& other) = default;
+    ~PrimeCache() = default;
     
     PrimeCache& operator=(PrimeCache&& other);
-    PrimeCache& operator=(const PrimeCache& other);
+    PrimeCache& operator=(const PrimeCache& other) = default;
     
+    void FillCache(int64_t value);
     bool IsPrime(int64_t value);
     
     std::vector<int64_t>::const_iterator begin() const

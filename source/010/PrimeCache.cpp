@@ -2,8 +2,8 @@
 #include <algorithm>
 
 PrimeCache::PrimeCache()
-    : _lastCheck(2)
-    , _primes{2}
+    : _lastCheck(3)
+    , _primes{2, 3}
 {
 }
 
@@ -12,16 +12,6 @@ PrimeCache::PrimeCache(PrimeCache&& other)
 {
     std::swap(_primes, other._primes);
     std::swap(_lastCheck, other._lastCheck);
-}
-
-PrimeCache::PrimeCache(const PrimeCache& other)
-    : _primes(other._primes)
-    , _lastCheck(other._lastCheck)
-{
-}
-
-PrimeCache::~PrimeCache()
-{
 }
 
 PrimeCache& PrimeCache::operator=(PrimeCache&& other)
@@ -35,20 +25,11 @@ PrimeCache& PrimeCache::operator=(PrimeCache&& other)
     return *this;
 }
 
-PrimeCache& PrimeCache::operator=(const PrimeCache& other)
+void PrimeCache::FillCache(int64_t value)
 {
-    if (this != &other)
-    {
-        _primes = other._primes;
-        _lastCheck = other._lastCheck;
-    }
+    if (!(value & 1)) ++value; // Ensure odd value.
     
-    return *this;
-}
-
-bool PrimeCache::IsPrime(int64_t value)
-{
-    for (int64_t i = _lastCheck + 1; i <= value; ++i)
+    for (int64_t i = _lastCheck + 2; i <= value; i += 2)
     {
         bool isPrime = true;
         
@@ -69,6 +50,11 @@ bool PrimeCache::IsPrime(int64_t value)
     }
     
     if (_lastCheck < value) _lastCheck = value;
+}
+
+bool PrimeCache::IsPrime(int64_t value)
+{
+    FillCache(value);
     
     return std::binary_search(
         _primes.begin(),

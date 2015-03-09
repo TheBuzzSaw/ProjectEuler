@@ -17,6 +17,16 @@ public:
     
     bool IsPrime(int64_t value);
     
+    std::vector<int64_t>::const_iterator begin() const
+    {
+        return _primes.cbegin();
+    }
+    
+    std::vector<int64_t>::const_iterator end() const
+    {
+        return _primes.cend();
+    }
+    
 private:
     std::vector<int64_t> _primes;
     int64_t _lastCheck;

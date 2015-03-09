@@ -10,11 +10,14 @@ int64_t SumOfPrimesBelow(int64_t n)
     
     if (n > 2)
     {
-        sum = 2;
+        cache.IsPrime(n);
         
-        for (int64_t i = 3; i < n; i += 2)
+        for (auto prime : cache)
         {
-            if (cache.IsPrime(i)) sum += i;
+            if (prime < n)
+                sum += prime;
+            else
+                break;
         }
     }
     

@@ -1,41 +1,27 @@
 #include <iostream>
+#include <sstream>
 #include <vector>
 using namespace std;
 
 int64_t SumOfPrimesBelow(int64_t n)
 {
-    vector<int64_t> primes{2};
+    vector<bool> isPrime(n, true);
+    isPrime[0] = false;
+    isPrime[1] = false;
+    
+    for (size_t i = 2; i < (size_t)n; ++i)
+    {
+        if (!isPrime[i]) continue;
+        
+        for (size_t j = i + i; j < (size_t)n; j += i)
+            isPrime[j] = false;
+    }
+    
     int64_t sum = 0;
     
-    if (n > 2)
+    for (int64_t i = 0; i < n; ++i)
     {
-        sum = 2;
-        
-        for (int64_t i = 3; i < n; i += 2)
-        {
-            bool isPrime = true;
-            
-            for (auto j : primes)
-            {
-                int64_t quotient = i / j;
-                
-                if (i == quotient * j)
-                {
-                    isPrime = false;
-                    break;
-                }
-                else if (j > quotient)
-                {
-                    break;
-                }
-            }
-            
-            if (isPrime)
-            {
-                primes.push_back(i);
-                sum += i;
-            }
-        }
+        if (isPrime[i]) sum += i;
     }
     
     return sum;
@@ -43,11 +29,23 @@ int64_t SumOfPrimesBelow(int64_t n)
 
 int main(int argc, char** argv)
 {
-    cout << "Sum of primes below 10: "
-        << SumOfPrimesBelow(10) << endl;
+    for (int i = 1; i < argc; ++i)
+    {
+        stringstream ss;
+        ss << argv[i];
         
-    cout << "Sum of primes below 2,000,000: "
-        << SumOfPrimesBelow(2000000) << endl;
-
+        int64_t n;
+        
+        if (ss >> n && n > 0)
+        {
+            cout << "Sum of primes below " << n << ": "
+                << SumOfPrimesBelow(n) << endl;
+        }
+        else
+        {
+            cout << "invalid input: " << argv[i] << endl;
+        }
+    }
+    
     return 0;
 }

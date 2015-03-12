@@ -1,23 +1,40 @@
 #include <iostream>
-#include "PrimeCache.hpp"
+#include <vector>
 using namespace std;
-
-PrimeCache cache;
 
 int64_t SumOfPrimesBelow(int64_t n)
 {
+    vector<int64_t> primes{2};
     int64_t sum = 0;
     
     if (n > 2)
     {
-        cache.FillCache(n);
+        sum = 2;
         
-        for (auto prime : cache)
+        for (int64_t i = 3; i < n; i += 2)
         {
-            if (prime < n)
-                sum += prime;
-            else
-                break;
+            bool isPrime = true;
+            
+            for (auto j : primes)
+            {
+                int64_t quotient = i / j;
+                
+                if (i == quotient * j)
+                {
+                    isPrime = false;
+                    break;
+                }
+                else if (j > quotient)
+                {
+                    break;
+                }
+            }
+            
+            if (isPrime)
+            {
+                primes.push_back(i);
+                sum += i;
+            }
         }
     }
     

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <chrono>
 using namespace std;
 
 int64_t SumOfPrimesBelow(int64_t n)
@@ -40,8 +41,14 @@ int main(int argc, char** argv)
         
         if (ss >> n && n > 0)
         {
-            cout << "Sum of primes below " << n << ": "
-                << SumOfPrimesBelow(n) << endl;
+            using namespace std::chrono;
+            auto start = high_resolution_clock::now();
+            auto sum = SumOfPrimesBelow(n);
+            auto finish = high_resolution_clock::now();
+            auto len = duration_cast<duration<double>>(finish - start);
+            
+            cout << "sum of primes below " << n << " is " << sum
+                << " (" << len.count() << "s)" << endl;
         }
         else
         {

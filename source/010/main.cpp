@@ -11,19 +11,22 @@ int64_t SumOfPrimesBelow(int64_t n)
     isPrime[0] = false;
     isPrime[1] = false;
     
-    for (int64_t i = 2; i < n; ++i)
-    {
-        if (!isPrime[i]) continue;
-        
-        for (int64_t j = i + i; j < n; j += i)
-            isPrime[j] = false;
-    }
-    
     int64_t sum = 2;
+    
+    for (int64_t i = 4; i < n; i += 2) isPrime[i] = false;
     
     for (int64_t i = 3; i < n; i += 2)
     {
-        if (isPrime[i]) sum += i;
+        if (isPrime[i])
+        {
+            sum += i;
+        
+            if (i * i < n)
+            {
+                for (int64_t j = i + i; j < n; j += i)
+                    isPrime[j] = false;
+            }
+        }
     }
     
     return sum;

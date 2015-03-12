@@ -5,21 +5,23 @@ using namespace std;
 
 int64_t SumOfPrimesBelow(int64_t n)
 {
+    if (n < 3) return 0; // Crashing is bad.
+    
     vector<bool> isPrime(n, true);
     isPrime[0] = false;
     isPrime[1] = false;
     
-    for (size_t i = 2; i < (size_t)n; ++i)
+    for (int64_t i = 2; i < n; ++i)
     {
         if (!isPrime[i]) continue;
         
-        for (size_t j = i + i; j < (size_t)n; j += i)
+        for (int64_t j = i + i; j < n; j += i)
             isPrime[j] = false;
     }
     
-    int64_t sum = 0;
+    int64_t sum = 2;
     
-    for (int64_t i = 0; i < n; ++i)
+    for (int64_t i = 3; i < n; i += 2)
     {
         if (isPrime[i]) sum += i;
     }

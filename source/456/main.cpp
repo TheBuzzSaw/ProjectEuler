@@ -74,6 +74,11 @@ bool operator>=(const Point& a, const Point& b)
     return a > b || a == b;
 }
 
+constexpr Point operator-(const Point& point)
+{
+    return { -point.x, -point.y };
+}
+
 int64_t CountPoints(
     const vector<Point>& points,
     const Point& low,
@@ -142,14 +147,18 @@ int64_t FindC(int64_t count)
     
     for (auto i = points.begin(); i != points.end(); ++i)
     {
-        auto boundary90 = RotateCCW(*i);
-        auto boundary180 = RotateCCW(boundary90);
-        auto boundary270 = RotateCCW(boundary180);
+        Point low = -*i;
+        int64_t batch = 0;
+        auto k = upper_bound(i + 1, points.end(), low);
         
-        int64_t a = CountPoints(points, boundary90, boundary180);
-        int64_t b = CountPoints(points, boundary180, boundary270);
-        
-        result += a * b;
+        for (auto j = i + 1; j != points.end() && *j < low; ++j)
+        {
+            Point high = -*j;
+            
+            while (k != points.end() && *k < high) ++k, ++batch;
+            
+            result += batch;
+        }
     }
     
     return result;

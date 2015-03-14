@@ -155,7 +155,16 @@ int64_t FindC(int64_t count)
         {
             Point high = -*j;
             
-            while (k != points.end() && *k < high) ++k, ++batch;
+            if (high < low)
+            {
+                while (k != points.end())
+                    ++k, ++batch;
+            }
+            else
+            {
+                while (k != points.end() && *k < high)
+                    ++k, ++batch;
+            }
             
             result += batch;
         }

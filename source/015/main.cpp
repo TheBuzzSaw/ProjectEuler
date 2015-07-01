@@ -10,14 +10,7 @@ int64_t CountPaths(int64_t width, int64_t height)
     
     int64_t w = width + 1;
     int64_t h = height + 1;
-    vector<int64_t> grid;
-    grid.resize(w * h);
-    
-    for (size_t i = 0; i < w; ++i)
-        grid[i] = 1;
-        
-    for (size_t i = 1; i < h; ++i)
-        grid[w * i] = 1;
+    vector<int64_t> grid(w * h, 1);
     
     size_t x = 1;
     size_t y = 1;
@@ -26,7 +19,8 @@ int64_t CountPaths(int64_t width, int64_t height)
     {
         while (y < h)
         {
-            grid[y * w + x] = grid[y * w + x - 1] + grid[(y - 1) * w + x];
+            auto n = y * w + x;
+            grid[n] = grid[n - 1] + grid[n - w];
             ++y;
         }
         
@@ -34,7 +28,7 @@ int64_t CountPaths(int64_t width, int64_t height)
         ++x;
     }
     
-    return grid[w * h - 1];
+    return grid.back();
 }
 
 int main(int argc, char** argv)

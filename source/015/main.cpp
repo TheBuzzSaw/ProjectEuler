@@ -12,20 +12,18 @@ int64_t CountPaths(int64_t width, int64_t height)
     int64_t h = height + 1;
     vector<int64_t> grid(w * h, 1);
     
-    size_t x = 1;
-    size_t y = 1;
+    int64_t x = 0;
+    int64_t y = 0;
     
-    while (x < w)
+    while (++x < w)
     {
-        while (y < h)
+        while (++y < h)
         {
             auto n = y * w + x;
             grid[n] = grid[n - 1] + grid[n - w];
-            ++y;
         }
         
-        y = 1;
-        ++x;
+        y = 0;
     }
     
     return grid.back();

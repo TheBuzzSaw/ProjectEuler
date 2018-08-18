@@ -20,8 +20,9 @@ namespace Kelly.Euler
             int i = 0;
             while (n > 0)
             {
-                buffer[i++] = (byte)(n % 10);
-                n /= 10;
+                int tenth = n / 10;
+                buffer[i++] = (byte)(n - tenth * 10);
+                n = tenth;
             }
 
             int max = i / 2;

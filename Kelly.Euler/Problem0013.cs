@@ -3,17 +3,6 @@ using System.Collections.Generic;
 
 namespace Kelly.Euler
 {
-    class BigDigits
-    {
-        private readonly List<byte> _digits = new List<byte>();
-
-        public BigDigits()
-        {
-        }
-
-
-    }
-
     class Problem0013 : ProblemEngine
     {
         private static readonly string[] BigNumbers = {
@@ -125,33 +114,32 @@ namespace Kelly.Euler
             _digitCount = digitCount;
         }
 
+        private static void Add(List<byte> digits, int index, int value)
+        {
+            int sum = value;
+
+            while (true)
+            {
+                while (digits.Count <= index)
+                    digits.Add(0);
+                
+                int digit = digits[index];
+                sum += digit;
+
+                if (sum < 10)
+                {
+                    digits[index] = (byte)(sum);
+                    break;
+                }
+
+                digits[index++] = (byte)(sum % 10);
+                sum /= 10;
+            }
+        }
+
         public override void SolveProblem()
         {
             var digits = new List<byte>();
-
-            void Add(int index, int value)
-            {
-                int sum = value;
-
-                while (true)
-                {
-                    while (digits.Count <= index)
-                        digits.Add(0);
-                    
-                    int digit = digits[index];
-                    sum += digit;
-
-                    if (sum < 10)
-                    {
-                        digits[index] = (byte)(sum);
-                        break;
-                    }
-
-                    digits[index] = (byte)(sum % 10);
-                    sum /= 10;
-                    ++index;
-                }
-            }
 
             foreach (var bigNumber in BigNumbers)
             {
@@ -160,7 +148,7 @@ namespace Kelly.Euler
                 for (int i = 0; i < bigNumber.Length; ++i)
                 {
                     int digit = bigNumber[last - i] - '0';
-                    Add(i, digit);
+                    Add(digits, i, digit);
                 }
             }
 

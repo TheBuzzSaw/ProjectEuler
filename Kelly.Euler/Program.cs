@@ -18,7 +18,8 @@ namespace Kelly.Euler
                 [7] = new Problem0007(10_001),
                 [8] = new Problem0008(13),
                 [9] = new Problem0009(1000),
-                [10] = new Problem0010(2_000_000)
+                [10] = new Problem0010(2_000_000),
+                [11] = new Problem0011(4)
             };
 
             try

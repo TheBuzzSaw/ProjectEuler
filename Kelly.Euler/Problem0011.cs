@@ -106,9 +106,10 @@ namespace Kelly.Euler
                     maxProduct = Math.Max(maxProduct, product);
 
                     product = 1;
+                    int xx = x - sequenceCount + 1;
 
                     for (int i = 0; i < sequenceCount; ++i)
-                        product *= Value(y - i, x - sequenceCount + 1 + i);
+                        product *= Value(y - i, xx + i);
                     
                     maxProduct = Math.Max(maxProduct, product);
                 }

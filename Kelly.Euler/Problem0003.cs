@@ -11,7 +11,7 @@ namespace Kelly.Euler
             _number = number;
         }
 
-        private static bool IsPrime(long n)
+        public static bool IsPrime(long n)
         {
             for (long i = 3; (i * i) < n; ++i)
             {

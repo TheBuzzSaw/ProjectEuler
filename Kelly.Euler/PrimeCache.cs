@@ -13,6 +13,14 @@ namespace Kelly.Euler
         {
         }
 
+        public long Prime(int index)
+        {
+            while (_primes.Count <= index)
+                IsPrime(_max + 101);
+            
+            return _primes[index];
+        }
+
         public bool IsPrime(long n)
         {
             if (n > _max)

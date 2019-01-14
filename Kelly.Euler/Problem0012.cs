@@ -11,7 +11,7 @@ namespace Kelly.Euler
             _minFactorCount = minFactorCount;
         }
 
-        public override void SolveProblem()
+        public void SolveProblem()
         {
             int minFactorCount = _minFactorCount;
             int factorCount = 0;

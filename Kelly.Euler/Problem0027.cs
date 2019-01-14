@@ -8,7 +8,7 @@ namespace Kelly.Euler
         {
         }
 
-        public override void SolveProblem()
+        public void SolveProblem()
         {
             var cache = new PrimeCache();
             int index = 0;

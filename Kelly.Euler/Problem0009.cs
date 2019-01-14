@@ -11,7 +11,7 @@ namespace Kelly.Euler
             _targetSum = targetSum;
         }
 
-        public override void SolveProblem()
+        public void SolveProblem()
         {
             int targetSum = _targetSum;
             int product = 0;

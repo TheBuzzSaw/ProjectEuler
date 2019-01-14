@@ -12,7 +12,7 @@ namespace Kelly.Euler
             _primeLimit = primeLimit;
         }
 
-        public override void SolveProblem()
+        public void SolveProblem()
         {
             int primeLimit = _primeLimit;
             long sum = 2;

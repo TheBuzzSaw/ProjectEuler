@@ -30,7 +30,7 @@ namespace Kelly.Euler
             _limit = limit;
         }
 
-        public override void SolveProblem()
+        public void SolveProblem()
         {
             int limit = _limit;
             int longestStart = 0;

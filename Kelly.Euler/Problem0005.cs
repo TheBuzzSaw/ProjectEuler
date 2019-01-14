@@ -11,7 +11,7 @@ namespace Kelly.Euler
             _number = number;
         }
 
-        public override void SolveProblem()
+        public void SolveProblem()
         {
             int number = _number;
             var maxFactorCounts = new short[number - 1];

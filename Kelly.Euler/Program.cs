@@ -9,7 +9,7 @@ namespace Kelly.Euler
         {
             var problems = new SortedDictionary<int, ProblemEngine>
             {
-                [1] = new Problem0001(1000),
+                [1] = new Problem0001(),
                 [2] = new Problem0002(4_000_000),
                 [3] = new Problem0003(600_851_475_143),
                 [4] = new Problem0004(100, 1000),
@@ -23,6 +23,7 @@ namespace Kelly.Euler
                 [12] = new Problem0012(500),
                 [13] = new Problem0013(10),
                 [14] = new Problem0014(1_000_000),
+                [15] = new Problem0015(),
                 [27] = new Problem0027()
             };
 
@@ -48,7 +49,7 @@ namespace Kelly.Euler
                         continue;
                     }
 
-                    Console.WriteLine(engine.TimeSolution());
+                    engine.Run();
                 }
             }
             catch (Exception exception)

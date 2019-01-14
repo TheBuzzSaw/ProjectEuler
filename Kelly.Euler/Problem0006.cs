@@ -11,7 +11,7 @@ namespace Kelly.Euler
             _naturalNumberCount = naturalNumberCount;
         }
 
-        public override void SolveProblem()
+        public void SolveProblem()
         {
             int naturalNumberCount = _naturalNumberCount;
 

@@ -11,7 +11,7 @@ namespace Kelly.Euler
             _primeOrdinal = primeOrdinal;
         }
 
-        public override void SolveProblem()
+        public void SolveProblem()
         {
             var cache = new PrimeCache();
             long prime = cache.Prime(_primeOrdinal - 1);

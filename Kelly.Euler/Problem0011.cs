@@ -39,7 +39,7 @@ namespace Kelly.Euler
             _sequenceCount = sequenceCount;
         }
 
-        public override void SolveProblem()
+        public void SolveProblem()
         {
             int maxProduct = Math.Max(HorizontalProduct(), VerticalProduct());
             maxProduct = Math.Max(maxProduct, DiagonalProduct());

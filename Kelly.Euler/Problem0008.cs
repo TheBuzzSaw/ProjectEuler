@@ -37,7 +37,7 @@ namespace Kelly.Euler
             _adjacentCount = adjacentCount;
         }
 
-        public override void SolveProblem()
+        public void SolveProblem()
         {
             int adjacentCount = _adjacentCount;
             long largestProduct = 0;

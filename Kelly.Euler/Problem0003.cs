@@ -22,7 +22,7 @@ namespace Kelly.Euler
             return true;
         }
 
-        public override void SolveProblem()
+        public void SolveProblem()
         {
             long number = _number;
             long result = 0;

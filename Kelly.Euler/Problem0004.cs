@@ -48,7 +48,7 @@ namespace Kelly.Euler
             return true;
         }
 
-        public override void SolveProblem()
+        public void SolveProblem()
         {
             int a = 0;
             int b = 0;

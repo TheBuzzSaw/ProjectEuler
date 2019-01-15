@@ -29,17 +29,9 @@ namespace Kelly.Euler
         
         private static readonly byte[] _digits =
             TextNumber.Select(c => (byte)(c - '0')).ToArray();
-            
-        private readonly int _adjacentCount;
 
-        public Problem0008(int adjacentCount)
+        public void SolveProblem(int adjacentCount = 13)
         {
-            _adjacentCount = adjacentCount;
-        }
-
-        public void SolveProblem()
-        {
-            int adjacentCount = _adjacentCount;
             long largestProduct = 0;
 
             for (int i = adjacentCount - 1; i < _digits.Length; ++i)

@@ -4,16 +4,8 @@ namespace Kelly.Euler
 {
     class Problem0005 : ProblemEngine
     {
-        private readonly int _number;
-
-        public Problem0005(int number)
+        public void SolveProblem(int number = 20)
         {
-            _number = number;
-        }
-
-        public void SolveProblem()
-        {
-            int number = _number;
             var maxFactorCounts = new short[number - 1];
 
             for (int i = 2; i <= number; ++i)

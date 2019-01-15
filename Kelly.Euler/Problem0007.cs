@@ -4,18 +4,11 @@ namespace Kelly.Euler
 {
     class Problem0007 : ProblemEngine
     {
-        private readonly int _primeOrdinal;
-
-        public Problem0007(int primeOrdinal)
-        {
-            _primeOrdinal = primeOrdinal;
-        }
-
-        public void SolveProblem()
+        public void SolveProblem(int primeOrdinal = 10_001)
         {
             var cache = new PrimeCache();
-            long prime = cache.Prime(_primeOrdinal - 1);
-            Console.WriteLine($"Prime #{_primeOrdinal} is {prime}.");
+            long prime = cache.Prime(primeOrdinal - 1);
+            Console.WriteLine($"Prime #{primeOrdinal} is {prime}.");
         }
     }
 }

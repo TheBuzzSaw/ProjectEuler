@@ -58,7 +58,10 @@ namespace Kelly.Euler
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             var result = _solveProblemMethod.Invoke(this, arguments);
             var elapsed = stopwatch.Elapsed;
-            Console.WriteLine($"result [{result}]");
+
+            if (result != null)
+                Console.WriteLine($"result [{result}]");
+            
             Console.WriteLine(elapsed);
         }
     }

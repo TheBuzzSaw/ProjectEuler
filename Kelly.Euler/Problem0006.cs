@@ -4,17 +4,8 @@ namespace Kelly.Euler
 {
     class Problem0006 : ProblemEngine
     {
-        private readonly int _naturalNumberCount;
-
-        public Problem0006(int naturalNumberCount)
+        public void SolveProblem(int naturalNumberCount = 100)
         {
-            _naturalNumberCount = naturalNumberCount;
-        }
-
-        public void SolveProblem()
-        {
-            int naturalNumberCount = _naturalNumberCount;
-
             int sum = 0;
             int squareSum = 0;
 

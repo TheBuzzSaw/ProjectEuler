@@ -4,15 +4,6 @@ namespace Kelly.Euler
 {
     class Problem0004 : ProblemEngine
     {
-        private readonly int _min;
-        private readonly int _max;
-
-        public Problem0004(int min, int max)
-        {
-            _min = min;
-            _max = max;
-        }
-
         private static bool IsPalindrome32Stack(int n)
         {
             Span<byte> buffer = stackalloc byte[12];
@@ -48,14 +39,19 @@ namespace Kelly.Euler
             return true;
         }
 
-        public void SolveProblem()
+        public void SolveProblem(int digitCount = 3)
         {
             int a = 0;
             int b = 0;
             int c = 0;
 
-            int max = _max;
-            for (int i = _min; i < max; ++i)
+            int min = 1;
+
+            for (int i = 1; i < digitCount; ++i)
+                min *= 10;
+
+            int max = min * 10;
+            for (int i = min; i < max; ++i)
             {
                 for (int j = i; j < max; ++j)
                 {

@@ -34,14 +34,27 @@ namespace Kelly.Euler
         {
             long largestProduct = 0;
 
-            for (int i = adjacentCount - 1; i < _digits.Length; ++i)
+            int last = _digits.Length - adjacentCount;
+            int skip = 0;
+
+            for (int i = 0; i < last; i += 1 + skip)
             {
+                skip = 0;
                 long product = 1;
 
                 for (int j = 0; j < adjacentCount; ++j)
-                    product *= _digits[i - j];
+                {
+                    var digit = _digits[i + j];
+                    product *= digit;
+                    
+                    if (digit == 0)
+                    {
+                        skip = j;
+                        break;
+                    }
+                }
                 
-                if (product > largestProduct)
+                if (largestProduct < product)
                     largestProduct = product;
             }
 
